@@ -1,0 +1,49 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User business profile details",
+      "type": "object",
+      "properties": {
+        "ownerName": {
+          "type": "string",
+          "description": "The name of the business owner"
+        },
+        "shopName": {
+          "type": "string",
+          "description": "The name of the business or shop"
+        },
+        "shopType": {
+          "type": "string",
+          "description": "The type of business (e.g. Pharmacy, Grocery Store, Hardware Shop)"
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the owner"
+        },
+        "phone": {
+          "type": "string",
+          "description": "The contact phone number"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of profile creation"
+        }
+      },
+      "required": [
+        "ownerName",
+        "shopName",
+        "shopType",
+        "email",
+        "phone",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection of user-specific business profiles and details"
+    }
+  }
+}

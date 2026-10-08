@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global safety net: default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper helper function to validate basic ID pattern
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Helper to validate the user entity
+    function isValidUser(data) {
+      return data.keys().hasAll(['ownerName', 'shopName', 'shopType', 'email', 'phone', 'createdAt'])
+        && (data.keys().size() == 6 || (data.keys().size() == 7 && data.setupCompleted is bool))
+        && data.ownerName is string && data.ownerName.size() <= 256
+        && data.shopName is string && data.shopName.size() <= 256
+        && data.shopType is string && data.shopType.size() <= 256
+        && data.email is string && data.email.size() <= 256
+        && data.phone is string && data.phone.size() <= 64
+        && data.createdAt is string && data.createdAt.size() <= 128;
+    }
+
+    match /users/{userId} {
+      allow get: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null 
+        && request.auth.uid == userId 
+        && isValidId(userId)
+        && isValidUser(request.resource.data);
+      allow update: if request.auth != null 
+        && request.auth.uid == userId 
+        && isValidId(userId)
+        && isValidUser(request.resource.data)
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if false; // profiles cannot be deleted
+    }
+  }
+}

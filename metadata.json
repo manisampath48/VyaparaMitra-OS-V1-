@@ -1,0 +1,6 @@
+{
+  "name": "VyaparaMitra",
+  "description": "An Autonomous AI Operating System for Small & Medium Businesses. Manage inventory, billing, sales, and predictive analytics through conversation.",
+  "requestFramePermissions": ["microphone", "camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
